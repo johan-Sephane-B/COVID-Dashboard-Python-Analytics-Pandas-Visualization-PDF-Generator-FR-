@@ -1,0 +1,52 @@
+
+COVID-19 Sample Data - Métadonnées
+===================================
+
+Ce fichier contient des données synthétiques générées pour tester le projet
+COVID-19 Dashboard. Les données ne sont PAS réelles mais simulent des patterns
+épidémiologiques réalistes.
+
+COLONNES :
+----------
+- date : Date de l'observation (YYYY-MM-DD)
+- location : Pays/région
+- total_cases : Nombre cumulatif de cas confirmés
+- new_cases : Nouveaux cas quotidiens
+- total_deaths : Nombre cumulatif de décès
+- new_deaths : Nouveaux décès quotidiens
+- total_recovered : Nombre cumulatif de guérisons
+- new_recovered : Nouvelles guérisons quotidiennes
+- active_cases : Cas actifs (total - recovered - deaths)
+- total_tests : Nombre cumulatif de tests
+- new_tests : Nouveaux tests quotidiens
+- positive_rate : Taux de positivité des tests (%)
+- people_vaccinated : Nombre de personnes ayant reçu au moins 1 dose
+- people_fully_vaccinated : Nombre de personnes complètement vaccinées
+- new_vaccinations : Nouvelles vaccinations quotidiennes
+- hosp_patients : Patients hospitalisés
+- icu_patients : Patients en soins intensifs
+- reproduction_rate : Taux de reproduction effectif (R)
+- stringency_index : Indice de sévérité des mesures (0-100)
+
+CARACTÉRISTIQUES :
+-----------------
+- Période couverte : ~365 jours
+- Nombre de pays : 10-15
+- Valeurs manquantes : ~5-10% (réaliste)
+- Doublons : ~1% (pour tester le nettoyage)
+- Patterns : Courbe épidémique gaussienne avec vagues
+
+UTILISATION :
+-------------
+Ces données sont parfaites pour :
+1. Tester le pipeline complet du projet
+2. Développer et déboguer le code
+3. Créer des exemples de visualisations
+4. Former à l'analyse de données
+
+Pour utiliser des données réelles, téléchargez-les depuis :
+- Our World in Data : https://ourworldindata.org/coronavirus
+- WHO : https://covid19.who.int/data
+- Johns Hopkins : https://github.com/CSSEGISandData/COVID-19
+
+Date de génération : 2026-01-07 16:01:07
