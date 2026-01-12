@@ -1,0 +1,26 @@
+# Dépendances COVID-19 Dashboard Streamlit
+# Version mise à jour avec toutes les dépendances nécessaires
+
+# Dépendances existantes (conservées)
+pandas>=2.0.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scipy>=1.10.0
+reportlab>=4.0.0
+jupyter>=1.0.0
+
+# Dépendances Streamlit (NOUVELLES)
+streamlit>=1.32.0
+plotly>=5.18.0
+kaleido>=0.2.1
+pycountry>=23.12.11
+country-converter>=1.2
+
+# Dépendances optionnelles mais recommandées
+openpyxl>=3.1.0
+xlsxwriter>=3.1.9
+pillow>=10.0.0
+
+# Pour les environnements virtuels (optionnel)
+# virtualenv>=20.0.0
