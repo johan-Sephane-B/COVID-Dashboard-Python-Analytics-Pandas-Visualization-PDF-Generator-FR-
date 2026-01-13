@@ -211,24 +211,74 @@ def main():
     latest_date = df['date'].max()
     df_latest = df[df['date'] == latest_date].copy()
     df_latest = df_latest[df_latest['location'].isin(selected_countries)]
-    df_latest['mortality_rate'] = (df_latest['total_deaths'] / df_latest['total_cases'] * 100).round(2)
+
+    # Calculer le taux avec gestion des divisions par zéro
+    df_latest['mortality_rate'] = df_latest.apply(
+        lambda row: (row['total_deaths'] / row['total_cases'] * 100) if row['total_cases'] > 0 else 0,
+        axis=1
+    ).round(2)
+
+    # Filtrer les valeurs valides
+    df_latest = df_latest[df_latest['mortality_rate'].notna()]
+    df_latest = df_latest[df_latest['mortality_rate'] >= 0]  # Pas de valeurs négatives
     df_latest = df_latest.sort_values('mortality_rate', ascending=True)
 
-    fig_mortality = px.bar(
-        df_latest,
-        x='mortality_rate',
-        y='location',
-        orientation='h',
-        color='mortality_rate',
-        color_continuous_scale='Reds',
-        title="Taux de Mortalité par Pays (%)",
-        labels={'mortality_rate': 'Taux de Mortalité (%)', 'location': 'Pays'},
-        text='mortality_rate'
-    )
-
-    fig_mortality.update_traces(texttemplate='%{text:.2f}%', textposition='outside')
-    fig_mortality.update_layout(height=400, showlegend=False)
-    st.plotly_chart(fig_mortality, use_container_width=True)
+    if len(df_latest) > 0:
+        # Choisir le type de graphique selon le nombre de pays
+        if len(df_latest) == 1:
+            # Un seul pays : afficher une card stylée
+            st.markdown(f"""
+            <div style='background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+                        padding: 30px; border-radius: 15px; text-align: center; color: white;'>
+                <h2>{df_latest.iloc[0]['location']}</h2>
+                <h1 style='font-size: 4em; margin: 20px 0;'>{df_latest.iloc[0]['mortality_rate']:.2f}%</h1>
+                <p style='font-size: 1.2em;'>Taux de Mortalité</p>
+                <p style='margin-top: 20px; opacity: 0.9;'>
+                    {df_latest.iloc[0]['total_deaths']:,.0f} décès / {df_latest.iloc[0]['total_cases']:,.0f} cas
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Plusieurs pays : graphique en barres
+            fig_mortality = px.bar(
+                df_latest,
+                x='mortality_rate',
+                y='location',
+                orientation='h',
+                color='mortality_rate',
+                color_continuous_scale='Reds',
+                title=f"Taux de Mortalité - {len(df_latest)} Pays Comparés",
+                labels={'mortality_rate': 'Taux de Mortalité (%)', 'location': 'Pays'},
+                text='mortality_rate',
+                hover_data={
+                    'total_cases': ':,.0f',
+                    'total_deaths': ':,.0f',
+                    'mortality_rate': ':.2f'
+                }
+            )
+            
+            fig_mortality.update_traces(
+                texttemplate='%{text:.2f}%', 
+                textposition='outside'
+            )
+            fig_mortality.update_layout(
+                height=max(400, len(df_latest) * 50),
+                showlegend=False,
+                xaxis_title="Taux de Mortalité (%)",
+                yaxis_title=""
+            )
+            st.plotly_chart(fig_mortality, use_container_width=True)
+        
+        # Tableau de détails
+        st.subheader("📋 Détails par Pays")
+        df_display = df_latest[['location', 'total_cases', 'total_deaths', 'mortality_rate']].copy()
+        df_display.columns = ['Pays', 'Cas Totaux', 'Décès Totaux', 'Taux Mortalité (%)']
+        df_display['Cas Totaux'] = df_display['Cas Totaux'].apply(lambda x: f"{x:,.0f}")
+        df_display['Décès Totaux'] = df_display['Décès Totaux'].apply(lambda x: f"{x:,.0f}")
+        st.dataframe(df_display, use_container_width=True, hide_index=True)
+        
+    else:
+        st.warning("⚠️ Aucune donnée de mortalité disponible pour les pays sélectionnés.")
 
     st.markdown("---")
 
@@ -261,7 +311,8 @@ def main():
     summary_stats = []
     for country in selected_countries:
         country_data = df[df['location'] == country]
-        latest = country_data[country_data['date'] == latest_date].iloc[0]
+        latest = country_data.sort_values('date').iloc[-1]
+
 
         stats = {
             'Pays': country,

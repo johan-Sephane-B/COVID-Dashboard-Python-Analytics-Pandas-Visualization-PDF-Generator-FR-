@@ -177,6 +177,8 @@ def main():
     
     # Calcul des statistiques globales
     stats = calculate_global_stats(df)
+    has_vaccination = stats.get('has_vaccination', False)
+    total_vaccinated = stats.get('total_vaccinated', 0)
     
     # ========== SECTION 1 : KPIs GLOBAUX ==========
     st.header("📈 Aperçu Global")

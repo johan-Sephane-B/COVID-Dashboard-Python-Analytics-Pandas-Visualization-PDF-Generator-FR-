@@ -10,6 +10,21 @@ from datetime import datetime
 import os
 import sys
 
+# Évite les erreurs d'encodage sous Windows (cp1252) avec les emojis/logs
+def _ensure_utf8_stdout():
+    try:
+        os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        if hasattr(sys.stderr, "reconfigure"):
+            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        # Ne bloque jamais l'import en cas d'environnement exotique
+        pass
+
+
+_ensure_utf8_stdout()
+
 # ========== CHARGEMENT DES DONNÉES ==========
 
 def load_covid_data(filepath):
@@ -571,6 +586,14 @@ def generate_html_report(df, figure_files, output_path):
 def generate_pdf_report(df, figure_files, output_path):
     """Génère un rapport PDF (nécessite reportlab)"""
     
+    # Essayer d'utiliser la fonction de report_generator.py si disponible
+    try:
+        from .report_generator import generate_pdf_report as original_pdf_report
+        # La fonction de report_generator accepte output_path comme paramètre optionnel
+        return original_pdf_report(df, figure_files, output_path=output_path)
+    except ImportError:
+        pass  # Continuer avec la version locale
+    
     try:
         from reportlab.lib.pagesizes import letter, A4
         from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table
@@ -645,6 +668,27 @@ def generate_pdf_report(df, figure_files, output_path):
         return generate_html_report(df, figure_files, html_path)
 
 
+def generate_report(df, figure_files, output_path, format='pdf'):
+    """
+    Fonction wrapper pour générer un rapport PDF ou HTML
+    
+    Args:
+        df (pd.DataFrame): DataFrame des données
+        figure_files (list): Liste des fichiers de visualisations
+        output_path (str): Chemin complet du fichier de sortie
+        format (str): Format du rapport ('pdf' ou 'html')
+    
+    Returns:
+        str: Chemin du fichier généré
+    """
+    if format.lower() == 'pdf':
+        return generate_pdf_report(df, figure_files, output_path)
+    elif format.lower() == 'html':
+        return generate_html_report(df, figure_files, output_path)
+    else:
+        raise ValueError(f"Format non supporté: {format}. Utilisez 'pdf' ou 'html'.")
+
+
 # ========== FONCTIONS DE COMPATIBILITÉ ==========
 
 # ========== FONCTIONS DE COMPATIBILITÉ ==========
@@ -678,12 +722,14 @@ try:
 except ImportError:
     print("ℹ️  Utilisation de create_all_visualizations du wrapper")
 
+# Ne pas importer generate_report depuis report_generator car on a notre propre wrapper
+# qui accepte le paramètre 'format'
 try:
-    from .report_generator import generate_report as original_report
-    print("✅ Utilisation de generate_report original")
-    generate_report = original_report
+    from .report_generator import generate_pdf_report as original_pdf_report
+    # Utiliser notre wrapper qui gère le paramètre format
+    print("✅ generate_pdf_report disponible depuis report_generator")
 except ImportError:
-    print("ℹ️  Utilisation de generate_report du wrapper")
+    print("ℹ️  report_generator non disponible, utilisation du wrapper local")
 
 
 # ========== EXPORTS ==========

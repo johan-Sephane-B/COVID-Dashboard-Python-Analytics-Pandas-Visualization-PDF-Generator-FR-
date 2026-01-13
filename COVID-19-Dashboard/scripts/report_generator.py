@@ -12,26 +12,32 @@ from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Image,
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 from datetime import datetime
 import pandas as pd
+import os
 from pathlib import Path
 
 
-def generate_pdf_report(df, figure_files, output_dir='output/reports'):
+def generate_pdf_report(df, figure_files, output_path=None, output_dir='output/reports'):
     """
     Génère un rapport PDF complet
     
     Args:
         df (pd.DataFrame): DataFrame des données nettoyées
         figure_files (list): Liste des fichiers de visualisations
-        output_dir (str): Dossier de destination
+        output_path (str, optional): Chemin complet du fichier PDF de sortie
+        output_dir (str): Dossier de destination (si output_path n'est pas fourni)
     
     Returns:
         str: Chemin du fichier PDF créé
     """
-    Path(output_dir).mkdir(parents=True, exist_ok=True)
-    
-    # Nom du fichier avec timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{output_dir}/COVID_Report_{timestamp}.pdf"
+    # Si output_path est fourni, l'utiliser directement
+    if output_path:
+        filename = output_path
+        Path(os.path.dirname(output_path)).mkdir(parents=True, exist_ok=True)
+    else:
+        # Sinon, générer le nom de fichier avec timestamp
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{output_dir}/COVID_Report_{timestamp}.pdf"
     
     # Création du document
     doc = SimpleDocTemplate(filename, pagesize=A4,
@@ -316,6 +322,9 @@ def create_conclusions(df, styles, heading_style):
     
     return elements
 
+
+# Alias pour compatibilité
+generate_report = generate_pdf_report
 
 # Test du module
 if __name__ == "__main__":

@@ -49,4 +49,4 @@ Pour utiliser des données réelles, téléchargez-les depuis :
 - WHO : https://covid19.who.int/data
 - Johns Hopkins : https://github.com/CSSEGISandData/COVID-19
 
-Date de génération : 2026-01-12 12:29:52
+Date de génération : 2026-01-12 17:39:06

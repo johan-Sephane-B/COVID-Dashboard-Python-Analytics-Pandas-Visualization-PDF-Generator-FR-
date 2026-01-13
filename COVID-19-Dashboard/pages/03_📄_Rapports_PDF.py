@@ -24,8 +24,7 @@ sys.path.insert(0, parent_dir)
 sys.path.insert(0, scripts_dir)
 
 try:
-    from scripts.data_utils import load_covid_data, clean_covid_data
-    from scripts.report_generator import generate_report
+    from scripts.data_utils import load_covid_data, clean_covid_data, generate_report
     from scripts.visualizations import create_all_visualizations
 except ImportError as e:
     st.error(f"⚠️ Impossible de charger les modules: {e}")

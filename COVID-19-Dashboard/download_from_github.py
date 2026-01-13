@@ -8,7 +8,6 @@ import os
 from pathlib import Path
 from datetime import datetime
 
-
 def download_file(url, output_path):
     """Télécharge un fichier avec progression"""
     print(f"   📥 Téléchargement depuis : {url}")
@@ -117,5 +116,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
