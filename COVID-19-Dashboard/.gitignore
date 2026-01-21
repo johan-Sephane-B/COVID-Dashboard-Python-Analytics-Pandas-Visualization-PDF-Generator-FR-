@@ -1,37 +1,98 @@
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+
+# Distribution / packaging
 .Python
-env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
 venv/
 ENV/
+env/
+.venv
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Data files
-*.csv
-*.xlsx
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-
-# Output files
-output/figures/*
-!output/figures/.gitkeep
-output/reports/*
-!output/reports/.gitkeep
-
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Data files (keep structure, ignore data)
+data/raw/*.csv
+data/processed/*.csv
+data/cache/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/cache/.gitkeep
+
+# Output files
+output/figures/*.png
+output/figures/*.pdf
+output/reports/*.pdf
+output/reports/*.html
+!output/figures/.gitkeep
+!output/reports/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
 # OS
 .DS_Store
 Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Streamlit
+.streamlit/secrets.toml
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# Gen
+*.html
+!output/reports/*.html
+
+# Backups
+*.bak
+*.backup
+*.old
+*_new.*
+# Exclude root HTML builds
+/demo_*.html
+/test_output_*.html
