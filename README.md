@@ -222,8 +222,8 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 
 ## 👥 Auteurs
 
-**Epi Analytics Team**
-*Projet Open Source maintenu par un passionné.*
+**BAHOU Johan Stéphane**
+*email:stephanejohanbahou@gmail.com*
 
 ---
 
